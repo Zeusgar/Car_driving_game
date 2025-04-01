@@ -10,6 +10,7 @@ ekraan.fill([255,255,255])
 main_menu = True
 running = True
 death = False
+gaming = False
 teksti_font = pygame.font.Font(None, 50)
 
 fps = 60
@@ -46,7 +47,7 @@ while running:
         tekst_pildina2 = teksti_font.render("Close", 1, [0, 0, 0])
         ekraan.blit(tekst_pildina2,[(width / 2) - tekst_pildina2.get_size()[0] / 2, (height / 2) - tekst_pildina2.get_size()[1]])
 
-    if death:
+    elif death:
         # Restart
         pygame.draw.rect(ekraan, [0, 0, 0], [225, 240, 150, 80], 2)
         tekst_pildina3 = teksti_font.render("Restart", 1, [0, 0, 0])
@@ -59,29 +60,28 @@ while running:
     else:
         ekraan.blit(taust, (0, 0))
 
+        if gaming:
+            # Mängu joonistamine
+            ekraan.blit(car_img, (car_x, car_y))
+            ekraan.blit(car_img, (obstacle_x, obstacle_y))
+
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_LEFT] and car_x > width // 5:
+                car_x -= car_speed
+            if keys[pygame.K_RIGHT] and car_x < width // 3.75 * 3 - car_width:
+                car_x += car_speed
+
+            obstacle_y += obstacle_speed
+
+            if obstacle_y > height:
+                obstacle_y = -obstacle_height
+                obstacle_x = random.randint(width // 4, width // 4 * 3 - obstacle_width)
+
         # Kokkupõrke kontroll
         if (car_x < obstacle_x + obstacle_width and car_x + car_width > obstacle_x and
                 car_y < obstacle_y + obstacle_height and car_y + car_height > obstacle_y):
             death = True
-            main_menu = False
-
-        # Mängu joonistamine
-        ekraan.blit(car_img, (car_x, car_y))
-        ekraan.blit(car_img, (obstacle_x, obstacle_y))
-
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] and car_x > width // 5:
-            car_x -= car_speed
-        if keys[pygame.K_RIGHT] and car_x < width // 3.75 * 3 - car_width:
-            car_x += car_speed
-
-        obstacle_y += obstacle_speed
-
-        if obstacle_y > height:
-            obstacle_y = -obstacle_height
-            obstacle_x = random.randint(width // 4, width // 4 * 3 - obstacle_width)
-
-
+            gaming = False
 
     for i in pygame.event.get():
         if i.type == pygame.QUIT:
@@ -91,6 +91,13 @@ while running:
             if main_menu:
                 if 225 < hiir_x < 375 and 240 < hiir_y < 420:
                     main_menu = False
+                    gaming = True
+                if 225 < hiir_x < 375 and 340 < hiir_y < 540:
+                    running = False
+            if death:
+                if 225 < hiir_x < 375 and 240 < hiir_y < 420:
+                    death = False
+                    gaming = True
                 if 225 < hiir_x < 375 and 340 < hiir_y < 540:
                     running = False
 
