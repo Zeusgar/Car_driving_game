@@ -26,7 +26,7 @@ car_width, car_height = 80, 120
 car_img = pygame.transform.scale(car_img, (car_width, car_height))
 
 roadblock_img = pygame.image.load("Roadblock.png")
-roadblock_width, roadblock_height = 120, 80
+roadblock_width, roadblock_height = 150, 110
 roadblock_img = pygame.transform.scale(roadblock_img, (roadblock_width, roadblock_height))
 
 # Auto seaded
