@@ -18,16 +18,21 @@ fps = 60
 # Pildid
 taust = pygame.image.load("Highway.png")
 taust = pygame.transform.scale(taust, (width, height))
+
 car_img = pygame.image.load("Auto.png")
 car_width, car_height = 80, 120
 car_img = pygame.transform.scale(car_img, (car_width, car_height))
+
+roadblock_img = pygame.image.load("Roadblock.png")
+roadblock_width, roadblock_height = 120, 80
+roadblock_img = pygame.transform.scale(roadblock_img, (roadblock_width, roadblock_height))
 
 # Auto seaded
 car_x, car_y = width // 2 - car_width // 2, height - car_height - 20
 car_speed = 5
 
-# Vastutulevad autod
-obstacle_width, obstacle_height = car_width, car_height
+# Tee peal olevad takistused
+obstacle_width, obstacle_height = roadblock_width, roadblock_height
 obstacle_x = random.randint(width // 4, width // 4 * 3 - obstacle_width)
 obstacle_y = -obstacle_height
 obstacle_speed = 8
@@ -63,7 +68,7 @@ while running:
         if gaming:
             # Mängu joonistamine
             ekraan.blit(car_img, (car_x, car_y))
-            ekraan.blit(car_img, (obstacle_x, obstacle_y))
+            ekraan.blit(roadblock_img, (obstacle_x, obstacle_y))
 
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT] and car_x > width // 5:
