@@ -22,7 +22,6 @@ while running:
         tekst_pildina2 = teksti_font.render("LÕPP", 1, [0, 0, 0])
         ekraan.blit(tekst_pildina2,[(800 / 2) - tekst_pildina2.get_size()[0] / 2, (600 / 2) + 100 - tekst_pildina2.get_size()[1]])
 
-#QWEQWE
 
 
     for i in pygame.event.get():
