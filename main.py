@@ -13,6 +13,8 @@ death = False
 gaming = False
 teksti_font = pygame.font.Font(None, 50)
 
+tausty = 0
+
 fps = 60
 
 # Pildid
@@ -63,7 +65,12 @@ while running:
         ekraan.blit(tekst_pildina4,[(width / 2) - tekst_pildina4.get_size()[0] / 2, (height / 2) - tekst_pildina4.get_size()[1]])
 
     else:
-        ekraan.blit(taust, (0, 0))
+        #paneb tausta liikuma
+        ekraan.blit(taust, (0, tausty))
+        ekraan.blit(taust, (0, tausty - height))
+        tausty += 8
+        if tausty >= height:
+            tausty = 0
 
         if gaming:
             # Mängu joonistamine
@@ -83,8 +90,8 @@ while running:
                 obstacle_x = random.randint(width // 4, width // 4 * 3 - obstacle_width)
 
         # Kokkupõrke kontroll
-        if (car_x < obstacle_x + obstacle_width and car_x + car_width > obstacle_x and
-                car_y < obstacle_y + obstacle_height and car_y + car_height > obstacle_y):
+        if (car_x < obstacle_x + obstacle_width-30 and car_x + car_width-20 > obstacle_x and
+                car_y < obstacle_y + obstacle_height-20 and car_y + car_height-20 > obstacle_y):
             death = True
             gaming = False
 
