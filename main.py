@@ -19,7 +19,7 @@ slowmotion = False
 
 fps = 60
 
-#Taustamuusika
+# Taustamuusika
 song = pygame.mixer.Sound("Mortals.mp3")
 soundON = pygame.image.load("SoundON.png")
 soundON = pygame.transform.scale(soundON, (50, 50))
@@ -72,7 +72,7 @@ while running:
         pygame.draw.rect(ekraan, close_color, [225, 340, 150, 80], 5)
         tekst_pildina2 = teksti_font.render("Close", 1, close_color)
         ekraan.blit(tekst_pildina2,[(width / 2) - tekst_pildina2.get_size()[0] / 2, (height / 2) - tekst_pildina2.get_size()[1]])
-        #Versioon
+        # Versioon
         versioon = teksti_font_versioon.render("v1.0", 1, [50,0,255])
         ekraan.blit(versioon, (2, 780))
 
@@ -91,7 +91,7 @@ while running:
 
 
     else:
-        #paneb tausta liikuma
+        # Paneb tausta liikuma
         ekraan.blit(taust, (0, tausty))
         ekraan.blit(taust, (0, tausty - height))
         tausty += taust_speed
@@ -139,7 +139,7 @@ while running:
         if i.type == pygame.QUIT:
             running = False
 
-        #Auto liigub kiiremini kui vajutad K_UP ja liigu aeglasemalt kui vajutad  K_DOWN, spacebar paneb tööle aekluubi
+        # Auto liigub kiiremini kui vajutad K_UP ja liigu aeglasemalt kui vajutad  K_DOWN, spacebar paneb tööle aekluubi
         elif i.type == pygame.KEYDOWN:
             if i.key == pygame.K_UP:
                 obstacle_speed += 2
@@ -198,3 +198,5 @@ while running:
     pygame.display.flip()
     clock.tick(fps)
 pygame.quit()
+
+# Panna obstacle nii, et ta spawnib suvaliselt kolmel real mitte täiesti suvaliselt
