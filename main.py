@@ -8,6 +8,7 @@ pygame.display.set_caption("Endless Car Driving Simulator")
 clock = pygame.time.Clock()
 ekraan.fill([255,255,255])
 teksti_font = pygame.font.Font(None, 50)
+teksti_font_versioon = pygame.font.Font(None, 30)
 main_menu = True
 running = True
 death = False
@@ -56,28 +57,36 @@ saved_obstacle_speed = obstacle_speed
 
 while running:
     ekraan.fill([255, 255, 255])
+    mouse_x, mouse_y = pygame.mouse.get_pos()
 
     # Main menu
     if main_menu:
         ekraan.blit(mainmenu_taust, (0,0))
         # Start
-        pygame.draw.rect(ekraan, [0, 0, 0], [225, 240, 150, 80], 2)
-        tekst_pildina = teksti_font.render("Start", 1, [0, 0, 0])
+        start_color = [0, 255, 0] if 225 < mouse_x < 375 and 240 < mouse_y < 320 else [0, 0, 0]
+        pygame.draw.rect(ekraan, start_color, [225, 240, 150, 80], 5)
+        tekst_pildina = teksti_font.render("Start", 1, start_color)
         ekraan.blit(tekst_pildina,[(width / 2) - tekst_pildina.get_size()[0] / 2, (height / 2) - 100 - tekst_pildina.get_size()[1]])
         # Lõpeta programm
-        pygame.draw.rect(ekraan, [0, 0, 0], [225, 340, 150, 80], 2)
-        tekst_pildina2 = teksti_font.render("Close", 1, [0, 0, 0])
+        close_color = [0, 255, 0] if 225 < mouse_x < 375 and 340 < mouse_y < 420 else [0, 0, 0]
+        pygame.draw.rect(ekraan, close_color, [225, 340, 150, 80], 5)
+        tekst_pildina2 = teksti_font.render("Close", 1, close_color)
         ekraan.blit(tekst_pildina2,[(width / 2) - tekst_pildina2.get_size()[0] / 2, (height / 2) - tekst_pildina2.get_size()[1]])
+        #Versioon
+        versioon = teksti_font_versioon.render("v1.0", 1, [50,0,255])
+        ekraan.blit(versioon, (2, 780))
 
     elif death:
         ekraan.blit(mainmenu_taust, (0, 0))
         # Restart
-        pygame.draw.rect(ekraan, [0, 0, 0], [225, 240, 150, 80], 2)
-        tekst_pildina3 = teksti_font.render("Restart", 1, [0, 0, 0])
+        restart_color = [0, 255, 0] if 225 < mouse_x < 375 and 240 < mouse_y < 320 else [0, 0, 0]
+        pygame.draw.rect(ekraan, restart_color, [225, 240, 150, 80], 5)
+        tekst_pildina3 = teksti_font.render("Restart", 1, restart_color)
         ekraan.blit(tekst_pildina3,[(width / 2) - tekst_pildina3.get_size()[0] / 2, (height / 2) - 100 - tekst_pildina3.get_size()[1]])
         # Lõpeta programm
-        pygame.draw.rect(ekraan, [0, 0, 0], [225, 340, 150, 80], 2)
-        tekst_pildina4 = teksti_font.render("Close", 1, [0, 0, 0])
+        close_color = [0, 255, 0] if 225 < mouse_x < 375 and 340 < mouse_y < 420 else [0, 0, 0]
+        pygame.draw.rect(ekraan, close_color, [225, 340, 150, 80], 5)
+        tekst_pildina4 = teksti_font.render("Close", 1, close_color)
         ekraan.blit(tekst_pildina4,[(width / 2) - tekst_pildina4.get_size()[0] / 2, (height / 2) - tekst_pildina4.get_size()[1]])
 
 
