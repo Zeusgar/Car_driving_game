@@ -7,19 +7,24 @@ ekraan = pygame.display.set_mode([width, height])
 pygame.display.set_caption("2D Car Driving Simulator")
 clock = pygame.time.Clock()
 ekraan.fill([255,255,255])
+teksti_font = pygame.font.Font(None, 50)
 main_menu = True
 running = True
 death = False
 gaming = False
-teksti_font = pygame.font.Font(None, 50)
+music = True
 
-tausty = 0
 
 fps = 60
+
+#Taustamuusika
+song = pygame.mixer.Sound()
 
 # Pildid
 taust = pygame.image.load("Highway.png")
 taust = pygame.transform.scale(taust, (width, height))
+tausty = 0
+taust_speed = 8
 
 car_img = pygame.image.load("Auto.png")
 car_width, car_height = 80, 120
@@ -68,7 +73,7 @@ while running:
         #paneb tausta liikuma
         ekraan.blit(taust, (0, tausty))
         ekraan.blit(taust, (0, tausty - height))
-        tausty += 8
+        tausty += taust_speed
         if tausty >= height:
             tausty = 0
 
@@ -90,14 +95,25 @@ while running:
                 obstacle_x = random.randint(width // 4, width // 4 * 3 - obstacle_width)
 
         # Kokkupõrke kontroll
-        if (car_x < obstacle_x + obstacle_width-30 and car_x + car_width-20 > obstacle_x and
-                car_y < obstacle_y + obstacle_height-20 and car_y + car_height-20 > obstacle_y):
+        if (car_x < obstacle_x + obstacle_width-30 and car_x + car_width-20 > obstacle_x and car_y < obstacle_y + obstacle_height-20 and car_y + car_height-20 > obstacle_y):
             death = True
             gaming = False
+            obstacle_speed = 8
+            taust_speed = 8
 
     for i in pygame.event.get():
         if i.type == pygame.QUIT:
             running = False
+
+        #Auto liigub kiiremini kui vajutad K_UP ja liigu aeglasemalt kui vajutad  K_DOWN
+        elif i.type == pygame.KEYDOWN:
+            if i.key == pygame.K_UP:
+                obstacle_speed += 2
+                taust_speed += 2
+            elif i.key == pygame.K_DOWN:
+                obstacle_speed -= 2
+                taust_speed -= 2
+
         elif i.type == pygame.MOUSEBUTTONDOWN:
             hiir_x, hiir_y = i.pos
             if main_menu:
