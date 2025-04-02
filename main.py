@@ -14,6 +14,7 @@ death = False
 gaming = False
 music = False
 musicKuva = True
+slowmotion = False
 
 fps = 60
 
@@ -29,6 +30,7 @@ taust = pygame.image.load("Highway.png")
 taust = pygame.transform.scale(taust, (width, height))
 tausty = 0
 taust_speed = 8
+saved_taust_speed = taust_speed
 
 car_img = pygame.image.load("Auto.png")
 car_width, car_height = 80, 120
@@ -41,12 +43,14 @@ roadblock_img = pygame.transform.scale(roadblock_img, (roadblock_width, roadbloc
 # Auto seaded
 car_x, car_y = width // 2 - car_width // 2, height - car_height - 20
 car_speed = 5
+saved_car_speed = car_speed
 
 # Tee peal olevad takistused
 obstacle_width, obstacle_height = roadblock_width, roadblock_height
 obstacle_x = random.randint(width // 5, width // 5 * 4 - obstacle_width)
 obstacle_y = -obstacle_height
 obstacle_speed = 8
+saved_obstacle_speed = obstacle_speed
 
 while running:
     ekraan.fill([255, 255, 255])
@@ -103,9 +107,15 @@ while running:
         if (car_x < obstacle_x + obstacle_width-30 and car_x + car_width-20 > obstacle_x and car_y < obstacle_y + obstacle_height-20 and car_y + car_height-20 > obstacle_y):
             death = True
             gaming = False
+            slowmotion = False
             obstacle_speed = 8
             taust_speed = 8
             car_speed = 5
+
+
+        if slowmotion:
+            taust_speed = 2
+            obstacle_speed = 2
 
     pygame.draw.rect(ekraan, [0, 0, 0], [0, 0, 50, 50], 2)
     if music == True:
@@ -117,7 +127,7 @@ while running:
         if i.type == pygame.QUIT:
             running = False
 
-        #Auto liigub kiiremini kui vajutad K_UP ja liigu aeglasemalt kui vajutad  K_DOWN
+        #Auto liigub kiiremini kui vajutad K_UP ja liigu aeglasemalt kui vajutad  K_DOWN, spacebar paneb tööle aekluubi
         elif i.type == pygame.KEYDOWN:
             if i.key == pygame.K_UP:
                 obstacle_speed += 2
@@ -130,6 +140,22 @@ while running:
                     obstacle_speed -= 2
                     taust_speed -= 2
                     car_speed -= 0.5
+            elif i.key == pygame.K_SPACE:
+                slowmotion = not slowmotion
+                if slowmotion:
+                    #Salvestab kiiruse enne aekluubi
+                    saved_taust_speed = taust_speed
+                    saved_obstacle_speed = obstacle_speed
+                    saved_car_speed = car_speed
+
+                    taust_speed = max(1, taust_speed // 4)
+                    obstacle_speed = max(1, obstacle_speed // 4)
+                    car_speed = max(1, 5)
+                else:
+                    taust_speed = saved_taust_speed
+                    obstacle_speed = saved_obstacle_speed
+                    car_speed = saved_car_speed
+
         elif i.type == pygame.MOUSEBUTTONDOWN:
             hiir_x, hiir_y = i.pos
             if main_menu:
@@ -160,5 +186,3 @@ while running:
     pygame.display.flip()
     clock.tick(fps)
 pygame.quit()
-
-#Teha slow motion mode
