@@ -26,6 +26,8 @@ soundOFF = pygame.image.load("SoundOFF.png")
 soundOFF = pygame.transform.scale(soundOFF, (50, 50))
 
 # Pildid
+mainmenu_taust = pygame.image.load("Taust_mainmenu.jpg")
+mainmenu_taust = pygame.transform.scale(mainmenu_taust, (width, height))
 taust = pygame.image.load("Highway.png")
 taust = pygame.transform.scale(taust, (width, height))
 tausty = 0
@@ -57,7 +59,7 @@ while running:
 
     # Main menu
     if main_menu:
-
+        ekraan.blit(mainmenu_taust)
         # Start
         pygame.draw.rect(ekraan, [0, 0, 0], [225, 240, 150, 80], 2)
         tekst_pildina = teksti_font.render("Start", 1, [0, 0, 0])
@@ -68,6 +70,7 @@ while running:
         ekraan.blit(tekst_pildina2,[(width / 2) - tekst_pildina2.get_size()[0] / 2, (height / 2) - tekst_pildina2.get_size()[1]])
 
     elif death:
+        ekraan.blit(mainmenu_taust)
         # Restart
         pygame.draw.rect(ekraan, [0, 0, 0], [225, 240, 150, 80], 2)
         tekst_pildina3 = teksti_font.render("Restart", 1, [0, 0, 0])
