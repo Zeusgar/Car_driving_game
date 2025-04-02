@@ -122,8 +122,11 @@ while running:
                 obstacle_speed += 2
                 taust_speed += 2
             elif i.key == pygame.K_DOWN:
-                obstacle_speed -= 2
-                taust_speed -= 2
+                if obstacle_speed == 0:
+                    pass
+                else:
+                    obstacle_speed -= 2
+                    taust_speed -= 2
 
         elif i.type == pygame.MOUSEBUTTONDOWN:
             hiir_x, hiir_y = i.pos
