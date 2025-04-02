@@ -12,8 +12,8 @@ main_menu = True
 running = True
 death = False
 gaming = False
-music = True
-
+music = False
+musicKuva = True
 
 fps = 60
 
@@ -23,12 +23,6 @@ soundON = pygame.image.load("SoundON.png")
 soundON = pygame.transform.scale(soundON, (50, 50))
 soundOFF = pygame.image.load("SoundOFF.png")
 soundOFF = pygame.transform.scale(soundOFF, (50, 50))
-if music == False:
-    song.play()
-    muusika = True
-elif music == True:
-    song.stop()
-    muusika = False
 
 # Pildid
 taust = pygame.image.load("Highway.png")
@@ -56,8 +50,8 @@ obstacle_speed = 8
 
 while running:
     ekraan.fill([255, 255, 255])
-    # Main menu
 
+    # Main menu
     if main_menu:
 
         # Start
@@ -79,8 +73,6 @@ while running:
         tekst_pildina4 = teksti_font.render("Close", 1, [0, 0, 0])
         ekraan.blit(tekst_pildina4,[(width / 2) - tekst_pildina4.get_size()[0] / 2, (height / 2) - tekst_pildina4.get_size()[1]])
 
-    elif music:
-        ekraan.blit(soundON, (0, 0))
 
     else:
         #paneb tausta liikuma
@@ -114,6 +106,12 @@ while running:
             obstacle_speed = 8
             taust_speed = 8
 
+    pygame.draw.rect(ekraan, [0, 0, 0], [0, 0, 50, 50], 2)
+    if music == True:
+        ekraan.blit(soundON, (0, 0))
+    elif music == False:
+        ekraan.blit(soundOFF, (0, 0))
+
     for i in pygame.event.get():
         if i.type == pygame.QUIT:
             running = False
@@ -135,6 +133,7 @@ while running:
                     gaming = True
                 if 225 < hiir_x < 375 and 340 < hiir_y < 540:
                     running = False
+
             if death:
                 if 225 < hiir_x < 375 and 240 < hiir_y < 420:
                     death = False
@@ -145,6 +144,14 @@ while running:
                 if 225 < hiir_x < 375 and 340 < hiir_y < 540:
                     running = False
 
+            if musicKuva:
+                if hiir_x > 0 and hiir_x < 50 and hiir_y > 0 and hiir_y < 50:
+                    if music == False:
+                        song.play()
+                        music = True
+                    elif music == True:
+                        song.stop()
+                        music = False
     pygame.display.flip()
     clock.tick(fps)
 pygame.quit()
