@@ -35,7 +35,7 @@ car_speed = 5
 
 # Tee peal olevad takistused
 obstacle_width, obstacle_height = roadblock_width, roadblock_height
-obstacle_x = random.randint(width // 4, width // 4 * 3 - obstacle_width)
+obstacle_x = random.randint(width // 5, width // 5 * 4 - obstacle_width)
 obstacle_y = -obstacle_height
 obstacle_speed = 8
 
@@ -110,6 +110,9 @@ while running:
                 if 225 < hiir_x < 375 and 240 < hiir_y < 420:
                     death = False
                     gaming = True
+                    car_x, car_y = width // 2 - car_width // 2, height - car_height - 20
+                    obstacle_x = random.randint(width // 5, width // 5 * 3 - obstacle_width)
+                    obstacle_y = -obstacle_height
                 if 225 < hiir_x < 375 and 340 < hiir_y < 540:
                     running = False
 
