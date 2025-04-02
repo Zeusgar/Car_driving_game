@@ -18,7 +18,13 @@ music = True
 fps = 60
 
 #Taustamuusika
-song = pygame.mixer.Sound()
+song = pygame.mixer.Sound("Mortals.mp3")
+if music == False:
+    song.play()
+    muusika = True
+elif music == True:
+    song.stop()
+    muusika = False
 
 # Pildid
 taust = pygame.image.load("Highway.png")
@@ -48,6 +54,8 @@ while running:
     ekraan.fill([255, 255, 255])
     # Main menu
 
+
+
     if main_menu:
 
         # Start
@@ -68,6 +76,7 @@ while running:
         pygame.draw.rect(ekraan, [0, 0, 0], [225, 340, 150, 80], 2)
         tekst_pildina4 = teksti_font.render("Close", 1, [0, 0, 0])
         ekraan.blit(tekst_pildina4,[(width / 2) - tekst_pildina4.get_size()[0] / 2, (height / 2) - tekst_pildina4.get_size()[1]])
+
 
     else:
         #paneb tausta liikuma
