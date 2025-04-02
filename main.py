@@ -105,6 +105,7 @@ while running:
             gaming = False
             obstacle_speed = 8
             taust_speed = 8
+            car_speed = 5
 
     pygame.draw.rect(ekraan, [0, 0, 0], [0, 0, 50, 50], 2)
     if music == True:
@@ -121,13 +122,14 @@ while running:
             if i.key == pygame.K_UP:
                 obstacle_speed += 2
                 taust_speed += 2
+                car_speed += 0.5
             elif i.key == pygame.K_DOWN:
                 if obstacle_speed == 0:
                     pass
                 else:
                     obstacle_speed -= 2
                     taust_speed -= 2
-
+                    car_speed -= 0.5
         elif i.type == pygame.MOUSEBUTTONDOWN:
             hiir_x, hiir_y = i.pos
             if main_menu:
@@ -158,3 +160,5 @@ while running:
     pygame.display.flip()
     clock.tick(fps)
 pygame.quit()
+
+#Teha slow motion mode
