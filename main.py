@@ -4,7 +4,7 @@ import random
 pygame.init()
 width, height = 600, 800
 ekraan = pygame.display.set_mode([width, height])
-pygame.display.set_caption("2D Car Driving Simulator")
+pygame.display.set_caption("Endless Car Driving Simulator")
 clock = pygame.time.Clock()
 ekraan.fill([255,255,255])
 teksti_font = pygame.font.Font(None, 50)
@@ -59,7 +59,7 @@ while running:
 
     # Main menu
     if main_menu:
-        ekraan.blit(mainmenu_taust)
+        ekraan.blit(mainmenu_taust, (0,0))
         # Start
         pygame.draw.rect(ekraan, [0, 0, 0], [225, 240, 150, 80], 2)
         tekst_pildina = teksti_font.render("Start", 1, [0, 0, 0])
@@ -70,7 +70,7 @@ while running:
         ekraan.blit(tekst_pildina2,[(width / 2) - tekst_pildina2.get_size()[0] / 2, (height / 2) - tekst_pildina2.get_size()[1]])
 
     elif death:
-        ekraan.blit(mainmenu_taust)
+        ekraan.blit(mainmenu_taust, (0, 0))
         # Restart
         pygame.draw.rect(ekraan, [0, 0, 0], [225, 240, 150, 80], 2)
         tekst_pildina3 = teksti_font.render("Restart", 1, [0, 0, 0])
