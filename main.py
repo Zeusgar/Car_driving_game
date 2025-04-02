@@ -19,6 +19,10 @@ fps = 60
 
 #Taustamuusika
 song = pygame.mixer.Sound("Mortals.mp3")
+soundON = pygame.image.load("SoundON.png")
+soundON = pygame.transform.scale(soundON, (50, 50))
+soundOFF = pygame.image.load("SoundOFF.png")
+soundOFF = pygame.transform.scale(soundOFF, (50, 50))
 if music == False:
     song.play()
     muusika = True
@@ -54,8 +58,6 @@ while running:
     ekraan.fill([255, 255, 255])
     # Main menu
 
-
-
     if main_menu:
 
         # Start
@@ -77,6 +79,8 @@ while running:
         tekst_pildina4 = teksti_font.render("Close", 1, [0, 0, 0])
         ekraan.blit(tekst_pildina4,[(width / 2) - tekst_pildina4.get_size()[0] / 2, (height / 2) - tekst_pildina4.get_size()[1]])
 
+    elif music:
+        ekraan.blit(soundON, (0, 0))
 
     else:
         #paneb tausta liikuma
