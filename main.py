@@ -50,7 +50,11 @@ saved_car_speed = car_speed
 
 # Tee peal olevad takistused
 obstacle_width, obstacle_height = roadblock_width, roadblock_height
-obstacle_x = random.randint(width // 5, width // 5 * 4 - obstacle_width)
+lane_width = width // 3
+lanes = [lane_width -120+ lane_width // 2 - obstacle_width // 2, # vasak rada
+        lane_width + lane_width // 2 - obstacle_width // 2, # keskmine rada
+         lane_width + 122 + lane_width // 2 - obstacle_width // 2] # parem rada
+obstacle_x = random.choice(lanes)
 obstacle_y = -obstacle_height
 obstacle_speed = 8
 saved_obstacle_speed = obstacle_speed
@@ -113,7 +117,7 @@ while running:
 
             if obstacle_y > height:
                 obstacle_y = -obstacle_height
-                obstacle_x = random.randint(width // 4, width // 4 * 3 - obstacle_width)
+                obstacle_x = random.choice(lanes)
 
         # Kokkupõrke kontroll
         if (car_x < obstacle_x + obstacle_width-30 and car_x + car_width-20 > obstacle_x and car_y < obstacle_y + obstacle_height-20 and car_y + car_height-20 > obstacle_y):
@@ -198,5 +202,3 @@ while running:
     pygame.display.flip()
     clock.tick(fps)
 pygame.quit()
-
-# Panna obstacle nii, et ta spawnib suvaliselt kolmel real mitte täiesti suvaliselt
