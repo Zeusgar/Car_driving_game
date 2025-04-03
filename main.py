@@ -20,7 +20,8 @@ slowmotion = False
 fps = 60
 
 # Taustamuusika
-song = pygame.mixer.Sound("Mortals.mp3")
+song = pygame.mixer.Sound("TokyoDrift.mp3")
+song.set_volume(0.02)
 soundON = pygame.image.load("SoundON.png")
 soundON = pygame.transform.scale(soundON, (50, 50))
 soundOFF = pygame.image.load("SoundOFF.png")
