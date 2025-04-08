@@ -92,7 +92,7 @@ while running:
         back_main_color = [0, 255, 0] if 550 < mouse_x < 600 and 0 < mouse_y < 50 else [0, 0, 0]
         back_main = pygame.draw.rect(ekraan, back_main_color, [550, 0, 50, 50], 2)
         back_main_kiri = teksti_font.render("X", 1, back_main_color)
-        ekraan.blit(back_main_kiri, [568, 10])
+        ekraan.blit(back_main_kiri, [564, 10])
 
     elif death:
         ekraan.blit(mainmenu_taust, (0, 0))
@@ -141,6 +141,7 @@ while running:
             obstacle_speed = 8
             taust_speed = 8
             car_speed = 5
+
 
 
         if slowmotion:
@@ -211,8 +212,8 @@ while running:
 
             if infoekraan:
                 if 550 < hiir_x < 600 and 0 < hiir_y < 50:
-                    main_menu = True
-                    infoekraan = False
+                    main_menu = False
+                    infoekraan = True
 
 
             if musicKuva:
