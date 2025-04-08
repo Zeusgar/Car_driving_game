@@ -31,8 +31,10 @@ soundOFF = pygame.image.load("SoundOFF.png")
 soundOFF = pygame.transform.scale(soundOFF, (50, 50))
 
 # Pildid
-mainmenu_taust = pygame.image.load("Taust_mainmenu.jpg")
+mainmenu_taust = pygame.image.load("Main_menu.png")
 mainmenu_taust = pygame.transform.scale(mainmenu_taust, (width, height))
+info_taust = pygame.image.load("Scroll.png")
+info_taust = pygame.transform.scale(info_taust, (width, height))
 taust = pygame.image.load("Highway.png")
 taust = pygame.transform.scale(taust, (width, height))
 tausty = 0
@@ -87,7 +89,7 @@ while running:
         ekraan.blit(info_kiri, [568, 10])
 
     elif infoekraan:
-        ekraan.fill([255,255,255])
+        ekraan.blit(info_taust, (0,0))
         back_main_color = [0, 255, 0] if 550 < mouse_x < 600 and 0 < mouse_y < 50 else [0, 0, 0]
         back_main = pygame.draw.rect(ekraan, back_main_color, [550, 0, 50, 50], 2)
         back_main_kiri = teksti_font.render("X", 1, back_main_color)
