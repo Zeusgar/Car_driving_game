@@ -1,3 +1,5 @@
+from operator import truediv
+
 import pygame
 import random
 
@@ -78,9 +80,6 @@ while running:
         pygame.draw.rect(ekraan, close_color, [225, 340, 150, 80], 5)
         tekst_pildina2 = teksti_font.render("Close", 1, close_color)
         ekraan.blit(tekst_pildina2,[(width / 2) - tekst_pildina2.get_size()[0] / 2, (height / 2) - tekst_pildina2.get_size()[1]])
-        # Versioon
-        versioon = teksti_font_versioon.render("v1.0", 1, [50,0,255])
-        ekraan.blit(versioon, (2, 780))
         # Info
         info_color = [0, 255, 0] if 550 < mouse_x < 600 and 0 < mouse_y < 50 else [0, 0, 0]
         info = pygame.draw.rect(ekraan, info_color, [550, 0, 50, 50], 2)
@@ -155,6 +154,10 @@ while running:
     elif music == False:
         ekraan.blit(soundOFF, (0, 0))
 
+    # Versioon
+    versioon = teksti_font_versioon.render("v1.0", 1, [50, 0, 255])
+    ekraan.blit(versioon, (2, 780))
+
     for i in pygame.event.get():
         if i.type == pygame.QUIT:
             running = False
@@ -190,7 +193,13 @@ while running:
 
         elif i.type == pygame.MOUSEBUTTONDOWN:
             hiir_x, hiir_y = i.pos
-            if main_menu:
+
+            if infoekraan:
+                if 550 < hiir_x < 600 and 0 < hiir_y < 50:
+                    infoekraan = False
+                    main_menu = True
+
+            elif main_menu:
                 if 225 < hiir_x < 375 and 240 < hiir_y < 420:
                     main_menu = False
                     gaming = True
@@ -200,7 +209,7 @@ while running:
                     infoekraan = True
                     main_menu = False
 
-            if death:
+            elif death:
                 if 225 < hiir_x < 375 and 240 < hiir_y < 420:
                     death = False
                     gaming = True
@@ -209,11 +218,6 @@ while running:
                     obstacle_y = -obstacle_height
                 if 225 < hiir_x < 375 and 340 < hiir_y < 540:
                     running = False
-
-            if infoekraan:
-                if 550 < hiir_x < 600 and 0 < hiir_y < 50:
-                    main_menu = False
-                    infoekraan = True
 
 
             if musicKuva:
