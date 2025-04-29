@@ -73,15 +73,15 @@ while running:
     if main_menu:
         ekraan.blit(mainmenu_taust, (0,0))
         # Start
-        start_color = [0, 255, 0] if 225 < mouse_x < 375 and 240 < mouse_y < 320 else [0, 0, 0]
-        pygame.draw.rect(ekraan, start_color, [225, 240, 150, 80], 5)
+        start_color = [0, 255, 0] if 225 < mouse_x < 375 and 280 < mouse_y < 360 else [0, 0, 0]
+        pygame.draw.rect(ekraan, start_color, [225, 280, 150, 80], 5)
         tekst_pildina = teksti_font.render("Start", 1, start_color)
-        ekraan.blit(tekst_pildina,[(width / 2) - tekst_pildina.get_size()[0] / 2, (height / 2) - 100 - tekst_pildina.get_size()[1]])
+        ekraan.blit(tekst_pildina,[(width / 2) - tekst_pildina.get_size()[0] / 2, (height / 2) - 60 - tekst_pildina.get_size()[1]])
         # Lõpeta programm
-        close_color = [0, 255, 0] if 225 < mouse_x < 375 and 340 < mouse_y < 420 else [0, 0, 0]
-        pygame.draw.rect(ekraan, close_color, [225, 340, 150, 80], 5)
+        close_color = [0, 255, 0] if 225 < mouse_x < 375 and 380 < mouse_y < 460 else [0, 0, 0]
+        pygame.draw.rect(ekraan, close_color, [225, 380, 150, 80], 5)
         tekst_pildina2 = teksti_font.render("Close", 1, close_color)
-        ekraan.blit(tekst_pildina2,[(width / 2) - tekst_pildina2.get_size()[0] / 2, (height / 2) - tekst_pildina2.get_size()[1]])
+        ekraan.blit(tekst_pildina2,[(width / 2) - tekst_pildina2.get_size()[0] / 2, (height / 2) + 40 - tekst_pildina2.get_size()[1]])
         # Info
         info_color = [0, 255, 0] if 550 < mouse_x < 600 and 0 < mouse_y < 50 else [0, 0, 0]
         info = pygame.draw.rect(ekraan, info_color, [550, 0, 50, 50], 2)
