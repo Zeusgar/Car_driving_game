@@ -9,7 +9,7 @@ ekraan = pygame.display.set_mode([width, height])
 pygame.display.set_caption("Endless Car Driving Simulator")
 clock = pygame.time.Clock()
 ekraan.fill([255,255,255])
-teksti_font = pygame.font.Font(None, 50)
+teksti_font = pygame.font.Font(None, 45)
 teksti_font_versioon = pygame.font.Font(None, 30)
 main_menu = True
 running = True
@@ -19,6 +19,7 @@ music = False
 musicKuva = True
 slowmotion = False
 infoekraan = False
+settings = False
 
 fps = 60
 
@@ -33,8 +34,12 @@ soundOFF = pygame.transform.scale(soundOFF, (50, 50))
 # Pildid
 mainmenu_taust = pygame.image.load("Main_menu.png")
 mainmenu_taust = pygame.transform.scale(mainmenu_taust, (width, height))
+death_taust = pygame.image.load("Death_screen.png")
+death_taust = pygame.transform.scale(death_taust, (width, height))
 info_taust = pygame.image.load("Scroll.png")
 info_taust = pygame.transform.scale(info_taust, (width, height))
+settings_taust = pygame.image.load("Scroll.png")
+settings_taust = pygame.transform.scale(settings_taust, (width, height))
 taust = pygame.image.load("Highway.png")
 taust = pygame.transform.scale(taust, (width, height))
 tausty = 0
@@ -76,12 +81,17 @@ while running:
         start_color = [0, 255, 0] if 225 < mouse_x < 375 and 280 < mouse_y < 360 else [0, 0, 0]
         pygame.draw.rect(ekraan, start_color, [225, 280, 150, 80], 5)
         tekst_pildina = teksti_font.render("Start", 1, start_color)
-        ekraan.blit(tekst_pildina,[(width / 2) - tekst_pildina.get_size()[0] / 2, (height / 2) - 60 - tekst_pildina.get_size()[1]])
+        ekraan.blit(tekst_pildina,[(width / 2) - tekst_pildina.get_size()[0] / 2, (height / 2) - 63 - tekst_pildina.get_size()[1]])
+        # Settings
+        settings_color = [0, 255, 0] if 225 < mouse_x < 375 and 380 < mouse_y < 460 else [0, 0, 0]
+        pygame.draw.rect(ekraan, settings_color, [225, 380, 150, 80], 5)
+        tekst_pildina3 = teksti_font.render("Settings", 1, settings_color)
+        ekraan.blit(tekst_pildina3,[(width / 2) - tekst_pildina3.get_size()[0] / 2, (height / 2) + 37 - tekst_pildina3.get_size()[1]])
         # Lõpeta programm
-        close_color = [0, 255, 0] if 225 < mouse_x < 375 and 380 < mouse_y < 460 else [0, 0, 0]
-        pygame.draw.rect(ekraan, close_color, [225, 380, 150, 80], 5)
+        close_color = [255, 0, 0] if 225 < mouse_x < 375 and 480 < mouse_y < 560 else [0, 0, 0]
+        pygame.draw.rect(ekraan, close_color, [225, 480, 150, 80], 5)
         tekst_pildina2 = teksti_font.render("Close", 1, close_color)
-        ekraan.blit(tekst_pildina2,[(width / 2) - tekst_pildina2.get_size()[0] / 2, (height / 2) + 40 - tekst_pildina2.get_size()[1]])
+        ekraan.blit(tekst_pildina2,[(width / 2) - tekst_pildina2.get_size()[0] / 2, (height / 2) + 137 - tekst_pildina2.get_size()[1]])
         # Info
         info_color = [0, 255, 0] if 550 < mouse_x < 600 and 0 < mouse_y < 50 else [0, 0, 0]
         info = pygame.draw.rect(ekraan, info_color, [550, 0, 50, 50], 2)
@@ -95,18 +105,25 @@ while running:
         back_main_kiri = teksti_font.render("X", 1, back_main_color)
         ekraan.blit(back_main_kiri, [564, 10])
 
+    elif settings:
+        ekraan.blit(settings_taust, (0, 0))
+        back_main_color = [0, 255, 0] if 550 < mouse_x < 600 and 0 < mouse_y < 50 else [0, 0, 0]
+        back_main = pygame.draw.rect(ekraan, back_main_color, [550, 0, 50, 50], 2)
+        back_main_kiri = teksti_font.render("X", 1, back_main_color)
+        ekraan.blit(back_main_kiri, [564, 10])
+
     elif death:
-        ekraan.blit(mainmenu_taust, (0, 0))
+        ekraan.blit(death_taust, (0, 0))
         # Restart
-        restart_color = [0, 255, 0] if 225 < mouse_x < 375 and 240 < mouse_y < 320 else [0, 0, 0]
-        pygame.draw.rect(ekraan, restart_color, [225, 240, 150, 80], 5)
+        restart_color = [0, 255, 0] if 210 < mouse_x < 390 and 390 < mouse_y < 470 else [0, 0, 0]
+        pygame.draw.rect(ekraan, restart_color, [210, 390, 180, 80], 5)
         tekst_pildina3 = teksti_font.render("Restart", 1, restart_color)
-        ekraan.blit(tekst_pildina3,[(width / 2) - tekst_pildina3.get_size()[0] / 2, (height / 2) - 100 - tekst_pildina3.get_size()[1]])
-        # Lõpeta programm
-        close_color = [0, 255, 0] if 225 < mouse_x < 375 and 340 < mouse_y < 420 else [0, 0, 0]
-        pygame.draw.rect(ekraan, close_color, [225, 340, 150, 80], 5)
-        tekst_pildina4 = teksti_font.render("Close", 1, close_color)
-        ekraan.blit(tekst_pildina4,[(width / 2) - tekst_pildina4.get_size()[0] / 2, (height / 2) - tekst_pildina4.get_size()[1]])
+        ekraan.blit(tekst_pildina3,[(width / 2) - tekst_pildina3.get_size()[0] / 2, (height / 2) + 50 - tekst_pildina3.get_size()[1]])
+        # Main menu
+        close_color = [0, 255, 0] if 210 < mouse_x < 390 and 490 < mouse_y < 570 else [0, 0, 0]
+        pygame.draw.rect(ekraan, close_color, [210, 490, 180, 80], 5)
+        tekst_pildina4 = teksti_font.render("Main Menu", 1, close_color)
+        ekraan.blit(tekst_pildina4,[(width / 2) - tekst_pildina4.get_size()[0] / 2, (height / 2) + 150 - tekst_pildina4.get_size()[1]])
 
 
     else:
@@ -157,7 +174,7 @@ while running:
         ekraan.blit(soundOFF, (0, 0))
 
     # Versioon
-    versioon = teksti_font_versioon.render("v1.0", 1, [50, 0, 255])
+    versioon = teksti_font_versioon.render("v0.01", 1, [50, 0, 255])
     ekraan.blit(versioon, (2, 780))
 
     for i in pygame.event.get():
@@ -201,26 +218,37 @@ while running:
                     infoekraan = False
                     main_menu = True
 
+            elif settings:
+                if 550 < hiir_x < 600 and 0 < hiir_y < 50:
+                    settings = False
+                    main_menu = True
+
             elif main_menu:
-                if 225 < hiir_x < 375 and 240 < hiir_y < 420:
+                if 225 < hiir_x < 375 and 280 < hiir_y < 360:
                     main_menu = False
                     gaming = True
-                if 225 < hiir_x < 375 and 340 < hiir_y < 540:
+                if 225 < hiir_x < 375 and 380 < hiir_y < 460:
+                    settings = True
+                    main_menu = False
+                if 225 < hiir_x < 375 and 480 < hiir_y < 560:
                     running = False
                 if 550 < hiir_x < 600 and 0 < hiir_y < 50:
                     infoekraan = True
                     main_menu = False
 
             elif death:
-                if 225 < hiir_x < 375 and 240 < hiir_y < 420:
+                if 210 < hiir_x < 375 and 390 < hiir_y < 470:
                     death = False
                     gaming = True
                     car_x, car_y = width // 2 - car_width // 2, height - car_height - 20
                     obstacle_x = random.randint(width // 5, width // 5 * 3 - obstacle_width)
                     obstacle_y = -obstacle_height
-                if 225 < hiir_x < 375 and 340 < hiir_y < 540:
-                    running = False
-
+                if 210 < hiir_x < 375 and 490 < hiir_y < 570:
+                    main_menu = True
+                    death = False
+                    car_x, car_y = width // 2 - car_width // 2, height - car_height - 20
+                    obstacle_x = random.randint(width // 5, width // 5 * 3 - obstacle_width)
+                    obstacle_y = -obstacle_height
 
             if musicKuva:
                 if hiir_x > 0 and hiir_x < 50 and hiir_y > 0 and hiir_y < 50:
