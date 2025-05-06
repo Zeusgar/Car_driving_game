@@ -20,6 +20,8 @@ musicKuva = True
 slowmotion = False
 infoekraan = False
 settings = False
+wasd = True
+nooled = False
 
 fps = 60
 
@@ -111,7 +113,17 @@ while running:
         back_main = pygame.draw.rect(ekraan, back_main_color, [550, 0, 50, 50], 2)
         back_main_kiri = teksti_font.render("X", 1, back_main_color)
         ekraan.blit(back_main_kiri, [564, 10])
-
+        # WASD või NOOLED
+        liikumisklahvid = teksti_font.render("Liikumine:", 1, [0,0,0])
+        ekraan.blit(liikumisklahvid, [100, 200])
+        if wasd:
+            wasd_kast = pygame.draw.rect(ekraan, [0,0,0],[260, 190, 150, 50], 2)
+            wasd_kiri = teksti_font.render("W,A,S,D", 1, [0,0,0])
+            ekraan.blit(wasd_kiri, [(width / 2) + 35 - wasd_kiri.get_size()[0] / 2, (height / 2) - 168 - wasd_kiri.get_size()[1]])
+        if nooled:
+            nooled_kast = pygame.draw.rect(ekraan, [0,0,0],[260, 190, 150, 50], 2)
+            nooled_kiri = teksti_font.render("NOOLED", 1, [0, 0, 0])
+            ekraan.blit(nooled_kiri, [(width / 2) + 35 - nooled_kiri.get_size()[0] / 2, (height / 2) - 168 - nooled_kiri.get_size()[1]])
     elif death:
         ekraan.blit(death_taust, (0, 0))
         # Restart
@@ -139,11 +151,19 @@ while running:
             ekraan.blit(car_img, (car_x, car_y))
             ekraan.blit(roadblock_img, (obstacle_x, obstacle_y))
 
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_LEFT] and car_x > width // 5:
-                car_x -= car_speed
-            if keys[pygame.K_RIGHT] and car_x < width // 3.75 * 3 - car_width:
-                car_x += car_speed
+            if nooled:
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_LEFT] and car_x > width // 5:
+                    car_x -= car_speed
+                if keys[pygame.K_RIGHT] and car_x < width // 3.75 * 3 - car_width:
+                    car_x += car_speed
+
+            if wasd:
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_a] and car_x > width // 5:
+                    car_x -= car_speed
+                if keys[pygame.K_d] and car_x < width // 3.75 * 3 - car_width:
+                    car_x += car_speed
 
             obstacle_y += obstacle_speed
 
@@ -222,6 +242,15 @@ while running:
                 if 550 < hiir_x < 600 and 0 < hiir_y < 50:
                     settings = False
                     main_menu = True
+
+                elif wasd:
+                    if 260 < hiir_x < 410 and 190 < hiir_y < 240:
+                        wasd = False
+                        nooled = True
+                elif nooled:
+                    if 260 < hiir_x < 410 and 190 < hiir_y < 240:
+                        wasd = True
+                        nooled = False
 
             elif main_menu:
                 if 225 < hiir_x < 375 and 280 < hiir_y < 360:
