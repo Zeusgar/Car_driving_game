@@ -3,6 +3,7 @@ from operator import truediv
 import pygame
 import random
 
+
 pygame.init()
 width, height = 600, 800
 ekraan = pygame.display.set_mode([width, height])
@@ -22,6 +23,9 @@ infoekraan = False
 settings = False
 wasd = True
 nooled = False
+res1 = True
+res2 = False
+res3 = False
 
 fps = 60
 
@@ -71,6 +75,10 @@ obstacle_x = random.choice(lanes)
 obstacle_y = -obstacle_height
 obstacle_speed = 8
 saved_obstacle_speed = obstacle_speed
+
+def muuda_resolutsioon(w, h):
+    global width, height, ekraan
+    global mainmenu_taust, death_taust, info_taust, settings_taust, taust
 
 while running:
     ekraan.fill([255, 255, 255])
@@ -124,6 +132,24 @@ while running:
             nooled_kast = pygame.draw.rect(ekraan, [0,0,0],[260, 190, 150, 50], 2)
             nooled_kiri = teksti_font.render("NOOLED", 1, [0, 0, 0])
             ekraan.blit(nooled_kiri, [(width / 2) + 35 - nooled_kiri.get_size()[0] / 2, (height / 2) - 168 - nooled_kiri.get_size()[1]])
+        # Resolutsioon
+        resolutsioon = teksti_font.render("Resolutsioon:", 1, [0,0,0])
+        ekraan.blit(resolutsioon, [100, 270])
+        if res1:
+            width, height = 600, 800
+            muuda_resolutsioon(600, 800)
+            res1_kast = pygame.draw.rect(ekraan, [0, 0, 0], [312, 260, 150, 50], 2)
+            res1_kiri = teksti_font.render("600x800", 1, [0, 0, 0])
+            ekraan.blit(res1_kiri,[(width / 2) + 88 - res1_kiri.get_size()[0] / 2, (height / 2) - 98 - res1_kiri.get_size()[1]])
+        if res2:
+            width, height = 800, 1000
+            muuda_resolutsioon(800, 1000)
+            res2_kast = pygame.draw.rect(ekraan, [0, 0, 0], [312, 260, 150, 50], 2)
+            res2_kiri = teksti_font.render("800x1000", 1, [0, 0, 0])
+            ekraan.blit(res2_kiri,[(width / 2) + 90 - res2_kiri.get_size()[0] / 2, (height / 2) - 98 - res2_kiri.get_size()[1]])
+        if res3:
+            width, height = 1000, 1200
+
     elif death:
         ekraan.blit(death_taust, (0, 0))
         # Restart
@@ -203,18 +229,7 @@ while running:
 
         # Auto liigub kiiremini kui vajutad K_UP ja liigu aeglasemalt kui vajutad  K_DOWN, spacebar paneb tööle aekluubi
         elif i.type == pygame.KEYDOWN:
-            if i.key == pygame.K_UP:
-                obstacle_speed += 2
-                taust_speed += 2
-                car_speed += 0.5
-            elif i.key == pygame.K_DOWN:
-                if obstacle_speed == 0:
-                    pass
-                else:
-                    obstacle_speed -= 2
-                    taust_speed -= 2
-                    car_speed -= 0.5
-            elif i.key == pygame.K_SPACE:
+            if i.key == pygame.K_SPACE:
                 slowmotion = not slowmotion
                 if slowmotion:
                     #Salvestab kiiruse enne aekluubi
@@ -251,6 +266,12 @@ while running:
                     if 260 < hiir_x < 410 and 190 < hiir_y < 240:
                         wasd = True
                         nooled = False
+
+                elif res1:
+                    if 312 < hiir_x < 462 and 260 < hiir_y < 310:
+                        res1 = False
+                        res2 = True
+                        muuda_resolutsioon(800, 1000)
 
             elif main_menu:
                 if 225 < hiir_x < 375 and 280 < hiir_y < 360:
