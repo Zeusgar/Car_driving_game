@@ -3,11 +3,14 @@ from operator import truediv
 import pygame
 import random
 
+from pygame.display import update
+from sqlalchemy.testing import skip_if
 
 pygame.init()
 width, height = 600, 800
 ekraan = pygame.display.set_mode([width, height])
 pygame.display.set_caption("Endless Car Driving Simulator")
+pygame.display.set_icon(pygame.image.load("Highway.png"))
 clock = pygame.time.Clock()
 ekraan.fill([255,255,255])
 teksti_font = pygame.font.Font(None, 45)
@@ -76,10 +79,14 @@ obstacle_y = -obstacle_height
 obstacle_speed = 8
 saved_obstacle_speed = obstacle_speed
 
-def muuda_resolutsioon(w, h):
-    global width, height, ekraan
-    global mainmenu_taust, death_taust, info_taust, settings_taust, taust
+def muuda_resolutsiooni(width, height, taust):
+    mainmenu_taust.update(width, height)
+    pygame.display.set_mode([width, height])
 
+
+
+
+run_once_res2 = 0
 while running:
     ekraan.fill([255, 255, 255])
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -137,16 +144,18 @@ while running:
         ekraan.blit(resolutsioon, [100, 270])
         if res1:
             width, height = 600, 800
-            muuda_resolutsioon(600, 800)
+
             res1_kast = pygame.draw.rect(ekraan, [0, 0, 0], [312, 260, 150, 50], 2)
             res1_kiri = teksti_font.render("600x800", 1, [0, 0, 0])
             ekraan.blit(res1_kiri,[(width / 2) + 88 - res1_kiri.get_size()[0] / 2, (height / 2) - 98 - res1_kiri.get_size()[1]])
-        if res2:
-            width, height = 800, 1000
-            muuda_resolutsioon(800, 1000)
+        if res2 and run_once_res2==0:
+            run_once_res2 = 0
+            muuda_resolutsiooni(800, 1000, mainmenu_taust)
             res2_kast = pygame.draw.rect(ekraan, [0, 0, 0], [312, 260, 150, 50], 2)
             res2_kiri = teksti_font.render("800x1000", 1, [0, 0, 0])
             ekraan.blit(res2_kiri,[(width / 2) + 90 - res2_kiri.get_size()[0] / 2, (height / 2) - 98 - res2_kiri.get_size()[1]])
+            ekraan.blit(settings_taust, (0, 0))
+            run_once_res2 = 1
         if res3:
             width, height = 1000, 1200
 
@@ -258,6 +267,11 @@ while running:
                     settings = False
                     main_menu = True
 
+                elif res1:
+                    if 312 < hiir_x < 462 and 260 < hiir_y < 310:
+                        res1 = False
+                        res2 = True
+
                 elif wasd:
                     if 260 < hiir_x < 410 and 190 < hiir_y < 240:
                         wasd = False
@@ -267,11 +281,7 @@ while running:
                         wasd = True
                         nooled = False
 
-                elif res1:
-                    if 312 < hiir_x < 462 and 260 < hiir_y < 310:
-                        res1 = False
-                        res2 = True
-                        muuda_resolutsioon(800, 1000)
+
 
             elif main_menu:
                 if 225 < hiir_x < 375 and 280 < hiir_y < 360:
