@@ -1,5 +1,5 @@
 from operator import truediv
-
+import math
 import pygame
 import random
 
@@ -19,13 +19,10 @@ gaming = False
 music = False
 musicKuva = True
 slowmotion = False
-infoekraan = False
+info_screen = False
 settings = False
 wasd = True
 nooled = False
-res1 = True
-res2 = False
-res3 = False
 
 fps = 60
 
@@ -44,13 +41,13 @@ death_taust = pygame.image.load("Death_screen.png")
 death_taust = pygame.transform.scale(death_taust, (width, height))
 info_taust = pygame.image.load("Scroll.png")
 info_taust = pygame.transform.scale(info_taust, (width, height))
-settings_taust = pygame.image.load("Scroll.png")
-settings_taust = pygame.transform.scale(settings_taust, (width, height))
-taust = pygame.image.load("Highway.png")
-taust = pygame.transform.scale(taust, (width, height))
+settings_background = pygame.image.load("Scroll.png")
+settings_background = pygame.transform.scale(settings_background, (width, height))
+background = pygame.image.load("Highway.png")
+background = pygame.transform.scale(background, (width, height))
 tausty = 0
-taust_speed = 8
-saved_taust_speed = taust_speed
+background_speed = 8
+saved_background_speed = background_speed
 
 car_img = pygame.image.load("Auto.png")
 car_width, car_height = 80, 120
@@ -76,13 +73,20 @@ obstacle_y = -obstacle_height
 obstacle_speed = 8
 saved_obstacle_speed = obstacle_speed
 
-def muuda_resolutsioon(w, h):
-    global width, height, ekraan
-    global mainmenu_taust, death_taust, info_taust, settings_taust, taust
+coin_img = pygame.image.load("Coin.png")
+coin_img = pygame.transform.scale(coin_img, (175, 175))
+
+coin_x = 0
+coin_y = 0
+coin_base_y = 0
+coin_amplitude = 10
+coin_phase = 0
+coin_counter = 0
 
 while running:
     ekraan.fill([255, 255, 255])
     mouse_x, mouse_y = pygame.mouse.get_pos()
+    coin_collected = False
 
     # Main menu
     if main_menu:
@@ -108,7 +112,7 @@ while running:
         info_kiri = teksti_font.render("!", 1, info_color)
         ekraan.blit(info_kiri, [568, 10])
 
-    elif infoekraan:
+    elif info_screen:
         ekraan.blit(info_taust, (0,0))
         back_main_color = [0, 255, 0] if 550 < mouse_x < 600 and 0 < mouse_y < 50 else [0, 0, 0]
         back_main = pygame.draw.rect(ekraan, back_main_color, [550, 0, 50, 50], 2)
@@ -116,7 +120,7 @@ while running:
         ekraan.blit(back_main_kiri, [564, 10])
 
     elif settings:
-        ekraan.blit(settings_taust, (0, 0))
+        ekraan.blit(settings_background, (0, 0))
         back_main_color = [0, 255, 0] if 550 < mouse_x < 600 and 0 < mouse_y < 50 else [0, 0, 0]
         back_main = pygame.draw.rect(ekraan, back_main_color, [550, 0, 50, 50], 2)
         back_main_kiri = teksti_font.render("X", 1, back_main_color)
@@ -132,23 +136,6 @@ while running:
             nooled_kast = pygame.draw.rect(ekraan, [0,0,0],[260, 190, 150, 50], 2)
             nooled_kiri = teksti_font.render("NOOLED", 1, [0, 0, 0])
             ekraan.blit(nooled_kiri, [(width / 2) + 35 - nooled_kiri.get_size()[0] / 2, (height / 2) - 168 - nooled_kiri.get_size()[1]])
-        # Resolutsioon
-        resolutsioon = teksti_font.render("Resolutsioon:", 1, [0,0,0])
-        ekraan.blit(resolutsioon, [100, 270])
-        if res1:
-            width, height = 600, 800
-            muuda_resolutsioon(600, 800)
-            res1_kast = pygame.draw.rect(ekraan, [0, 0, 0], [312, 260, 150, 50], 2)
-            res1_kiri = teksti_font.render("600x800", 1, [0, 0, 0])
-            ekraan.blit(res1_kiri,[(width / 2) + 88 - res1_kiri.get_size()[0] / 2, (height / 2) - 98 - res1_kiri.get_size()[1]])
-        if res2:
-            width, height = 800, 1000
-            muuda_resolutsioon(800, 1000)
-            res2_kast = pygame.draw.rect(ekraan, [0, 0, 0], [312, 260, 150, 50], 2)
-            res2_kiri = teksti_font.render("800x1000", 1, [0, 0, 0])
-            ekraan.blit(res2_kiri,[(width / 2) + 90 - res2_kiri.get_size()[0] / 2, (height / 2) - 98 - res2_kiri.get_size()[1]])
-        if res3:
-            width, height = 1000, 1200
 
     elif death:
         ekraan.blit(death_taust, (0, 0))
@@ -166,9 +153,9 @@ while running:
 
     else:
         # Paneb tausta liikuma
-        ekraan.blit(taust, (0, tausty))
-        ekraan.blit(taust, (0, tausty - height))
-        tausty += taust_speed
+        ekraan.blit(background, (0, tausty))
+        ekraan.blit(background, (0, tausty - height))
+        tausty += background_speed
         if tausty >= height:
             tausty = 0
 
@@ -192,10 +179,33 @@ while running:
                     car_x += car_speed
 
             obstacle_y += obstacle_speed
+            coin_base_y += obstacle_speed
+
+            if not coin_collected:
+                coin_phase += 0.1
+                coin_y = coin_base_y + math.sin(coin_phase) * 10
+
+                coin_rect = pygame.Rect(coin_x + (obstacle_width - 50) // 2, coin_y, 50, 50)
+                car_rect = pygame.Rect(car_x, car_y, car_width, car_height)
+
+                if car_rect.colliderect(coin_rect):
+                    coin_counter += 1
+                    coin_collected = True
+                else:
+                    ekraan.blit(coin_img, (coin_x + (obstacle_width - 50) // 2, coin_y))
 
             if obstacle_y > height:
                 obstacle_y = -obstacle_height
                 obstacle_x = random.choice(lanes)
+
+                obstacle_lane = lanes.index(obstacle_x)
+                coin_lane = random.choice([i for i in range(len(lanes)) if i != obstacle_lane])
+                coin_x = lanes[coin_lane]
+                coin_base_y = obstacle_y - 100
+                coin_y = coin_base_y
+                coin_collected = False
+                coin_phase = 0
+
 
         # Kokkupõrke kontroll
         if (car_x < obstacle_x + obstacle_width-30 and car_x + car_width-20 > obstacle_x and car_y < obstacle_y + obstacle_height-20 and car_y + car_height-20 > obstacle_y):
@@ -203,13 +213,14 @@ while running:
             gaming = False
             slowmotion = False
             obstacle_speed = 8
-            taust_speed = 8
+            background_speed = 8
             car_speed = 5
+            coin_counter = 0
 
 
 
         if slowmotion:
-            taust_speed = 2
+            background_speed = 2
             obstacle_speed = 2
 
     music_color = [0, 255, 0] if 0 < mouse_x < 50 and 0 < mouse_y < 50 else [0, 0, 0]
@@ -220,8 +231,8 @@ while running:
         ekraan.blit(soundOFF, (0, 0))
 
     # Versioon
-    versioon = teksti_font_versioon.render("v0.01", 1, [50, 0, 255])
-    ekraan.blit(versioon, (2, 780))
+    version = teksti_font_versioon.render("v0.01", 1, [50, 0, 255])
+    ekraan.blit(version, (2, 780))
 
     for i in pygame.event.get():
         if i.type == pygame.QUIT:
@@ -233,24 +244,24 @@ while running:
                 slowmotion = not slowmotion
                 if slowmotion:
                     #Salvestab kiiruse enne aekluubi
-                    saved_taust_speed = taust_speed
+                    saved_background_speed = background_speed
                     saved_obstacle_speed = obstacle_speed
                     saved_car_speed = car_speed
 
-                    taust_speed = max(1, taust_speed // 4)
+                    background_speed = max(1, background_speed // 4)
                     obstacle_speed = max(1, obstacle_speed // 4)
                     car_speed = max(1, 5)
                 else:
-                    taust_speed = saved_taust_speed
+                    background_speed = saved_background_speed
                     obstacle_speed = saved_obstacle_speed
                     car_speed = saved_car_speed
 
         elif i.type == pygame.MOUSEBUTTONDOWN:
             hiir_x, hiir_y = i.pos
 
-            if infoekraan:
+            if info_screen:
                 if 550 < hiir_x < 600 and 0 < hiir_y < 50:
-                    infoekraan = False
+                    info_screen = False
                     main_menu = True
 
             elif settings:
@@ -267,12 +278,6 @@ while running:
                         wasd = True
                         nooled = False
 
-                elif res1:
-                    if 312 < hiir_x < 462 and 260 < hiir_y < 310:
-                        res1 = False
-                        res2 = True
-                        muuda_resolutsioon(800, 1000)
-
             elif main_menu:
                 if 225 < hiir_x < 375 and 280 < hiir_y < 360:
                     main_menu = False
@@ -283,7 +288,7 @@ while running:
                 if 225 < hiir_x < 375 and 480 < hiir_y < 560:
                     running = False
                 if 550 < hiir_x < 600 and 0 < hiir_y < 50:
-                    infoekraan = True
+                    info_screen = True
                     main_menu = False
 
             elif death:
@@ -308,6 +313,9 @@ while running:
                     elif music == True:
                         song.stop()
                         music = False
+
+    coin_text = teksti_font.render(f"Coins: {coin_counter}", 1, [255, 215, 0])
+    ekraan.blit(coin_text, (10, 740))
     pygame.display.flip()
     clock.tick(fps)
 pygame.quit()
