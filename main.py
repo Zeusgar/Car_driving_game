@@ -29,6 +29,7 @@ fps = 60
 # Taustamuusika
 song = pygame.mixer.Sound("TokyoDrift.mp3")
 song.set_volume(0.02)
+explosion_sound = pygame.mixer.Sound("explosion.mp3")
 soundON = pygame.image.load("SoundON.png")
 soundON = pygame.transform.scale(soundON, (50, 50))
 soundOFF = pygame.image.load("SoundOFF.png")
@@ -86,7 +87,7 @@ coin_counter = 0
 while running:
     ekraan.fill([255, 255, 255])
     mouse_x, mouse_y = pygame.mouse.get_pos()
-    coin_collected = False
+
 
     # Main menu
     if main_menu:
@@ -163,6 +164,7 @@ while running:
             # Mängu joonistamine
             ekraan.blit(car_img, (car_x, car_y))
             ekraan.blit(roadblock_img, (obstacle_x, obstacle_y))
+            coin_collected = False
 
             if nooled:
                 keys = pygame.key.get_pressed()
@@ -185,14 +187,14 @@ while running:
                 coin_phase += 0.1
                 coin_y = coin_base_y + math.sin(coin_phase) * 10
 
-                coin_rect = pygame.Rect(coin_x + (obstacle_width - 50) // 2, coin_y, 50, 50)
+                coin_rect = pygame.Rect(coin_x + (obstacle_width - 50) // 2, coin_y + 125, 50, 50)
                 car_rect = pygame.Rect(car_x, car_y, car_width, car_height)
 
                 if car_rect.colliderect(coin_rect):
                     coin_counter += 1
                     coin_collected = True
                 else:
-                    ekraan.blit(coin_img, (coin_x + (obstacle_width - 50) // 2, coin_y))
+                    ekraan.blit(coin_img, (coin_x + (obstacle_width - 170) // 2, coin_y + 50))
 
             if obstacle_y > height:
                 obstacle_y = -obstacle_height
@@ -216,6 +218,7 @@ while running:
             background_speed = 8
             car_speed = 5
             coin_counter = 0
+            explosion_sound.play()
 
 
 
@@ -238,7 +241,7 @@ while running:
         if i.type == pygame.QUIT:
             running = False
 
-        # Auto liigub kiiremini kui vajutad K_UP ja liigu aeglasemalt kui vajutad  K_DOWN, spacebar paneb tööle aekluubi
+        # Spacebar paneb tööle aekluubi
         elif i.type == pygame.KEYDOWN:
             if i.key == pygame.K_SPACE:
                 slowmotion = not slowmotion
@@ -296,13 +299,15 @@ while running:
                     death = False
                     gaming = True
                     car_x, car_y = width // 2 - car_width // 2, height - car_height - 20
-                    obstacle_x = random.randint(width // 5, width // 5 * 3 - obstacle_width)
+                    obstacle_x = random.choice(lanes)
                     obstacle_y = -obstacle_height
+                    coin_base_x = random.choice(lanes)
+
                 if 210 < hiir_x < 375 and 490 < hiir_y < 570:
                     main_menu = True
                     death = False
                     car_x, car_y = width // 2 - car_width // 2, height - car_height - 20
-                    obstacle_x = random.randint(width // 5, width // 5 * 3 - obstacle_width)
+                    obstacle_x = random.choice(lanes)
                     obstacle_y = -obstacle_height
 
             if musicKuva:
