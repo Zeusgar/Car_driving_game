@@ -28,19 +28,27 @@ fps = 60
 
 # Taustamuusika
 song = pygame.mixer.Sound("TokyoDrift.mp3")
-song.set_volume(0.02)
-explosion_sound = pygame.mixer.Sound("explosion.mp3")
+explosion_sound = pygame.mixer.Sound("explosion2.mp3")
 soundON = pygame.image.load("SoundON.png")
 soundON = pygame.transform.scale(soundON, (50, 50))
 soundOFF = pygame.image.load("SoundOFF.png")
 soundOFF = pygame.transform.scale(soundOFF, (50, 50))
+
+music_volume = 0.02
+sfx_volume = 1.0
+song.set_volume(music_volume)
+explosion_sound.set_volume(sfx_volume)
+
+slider_rect = pygame.Rect(150, 300, 300, 10)
+handle_rect = pygame.Rect(150 + 300 * song.get_volume(), 290, 10, 30)
+dragging_slider = False
 
 # Pildid
 mainmenu_taust = pygame.image.load("Main_menu.png")
 mainmenu_taust = pygame.transform.scale(mainmenu_taust, (width, height))
 death_taust = pygame.image.load("Death_screen.png")
 death_taust = pygame.transform.scale(death_taust, (width, height))
-info_taust = pygame.image.load("Scroll.png")
+info_taust = pygame.image.load("Scroll_info.png")
 info_taust = pygame.transform.scale(info_taust, (width, height))
 settings_background = pygame.image.load("Scroll.png")
 settings_background = pygame.transform.scale(settings_background, (width, height))
@@ -77,13 +85,17 @@ saved_obstacle_speed = obstacle_speed
 coin_img = pygame.image.load("Coin.png")
 coin_img = pygame.transform.scale(coin_img, (175, 175))
 
-coin_x = 0
-coin_y = 0
-coin_base_y = 0
+coin_lane = random.choice([i for i in range(len(lanes)) if lanes[i] != obstacle_x])
+coin_x = lanes[coin_lane]
+coin_base_y = obstacle_y - 100
+coin_y = coin_base_y
 coin_amplitude = 10
 coin_phase = 0
 coin_counter = 0
 
+score = 0
+
+coin_collected = False
 while running:
     ekraan.fill([255, 255, 255])
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -114,6 +126,7 @@ while running:
         ekraan.blit(info_kiri, [568, 10])
 
     elif info_screen:
+        #infoekraan
         ekraan.blit(info_taust, (0,0))
         back_main_color = [0, 255, 0] if 550 < mouse_x < 600 and 0 < mouse_y < 50 else [0, 0, 0]
         back_main = pygame.draw.rect(ekraan, back_main_color, [550, 0, 50, 50], 2)
@@ -122,6 +135,20 @@ while running:
 
     elif settings:
         ekraan.blit(settings_background, (0, 0))
+        # Muusika heli muutmine
+        music_text = teksti_font.render("Music Volume", 1, [0, 0, 0])
+        ekraan.blit(music_text, [100, 300])
+        pygame.draw.rect(ekraan, [100, 100, 100], [300, 310, 200, 10])
+        pygame.draw.rect(ekraan, [0, 255, 0], [300, 310, int(music_volume * 200), 10])
+        pygame.draw.circle(ekraan, [0, 0, 0], [300 + int(music_volume * 200), 315], 8)
+
+        # SFX heli muutmine
+        sfx_text = teksti_font.render("SFX Volume", 1, [0, 0, 0])
+        ekraan.blit(sfx_text, [100, 350])
+        pygame.draw.rect(ekraan, [100, 100, 100], [300, 360, 200, 10])
+        pygame.draw.rect(ekraan, [255, 0, 0], [300, 360, int(sfx_volume * 200), 10])
+        pygame.draw.circle(ekraan, [0, 0, 0], [300 + int(sfx_volume * 200), 365], 8)
+        # tagasi main menüü
         back_main_color = [0, 255, 0] if 550 < mouse_x < 600 and 0 < mouse_y < 50 else [0, 0, 0]
         back_main = pygame.draw.rect(ekraan, back_main_color, [550, 0, 50, 50], 2)
         back_main_kiri = teksti_font.render("X", 1, back_main_color)
@@ -150,6 +177,12 @@ while running:
         pygame.draw.rect(ekraan, close_color, [210, 490, 180, 80], 5)
         tekst_pildina4 = teksti_font.render("Main Menu", 1, close_color)
         ekraan.blit(tekst_pildina4,[(width / 2) - tekst_pildina4.get_size()[0] / 2, (height / 2) + 150 - tekst_pildina4.get_size()[1]])
+        # Näitab lõpliku score
+        score_text = teksti_font.render(f"Score: {score}", 1, [0, 0, 0])
+        ekraan.blit(score_text, (width // 2 - score_text.get_width() // 2, 300))
+        # Näitab palju coine said
+        coin_text = teksti_font.render(f"Coins: {coin_counter}", 1, [0, 0, 0])
+        ekraan.blit(coin_text, (width // 2 - coin_text.get_width() // 2, 340))
 
 
     else:
@@ -164,15 +197,15 @@ while running:
             # Mängu joonistamine
             ekraan.blit(car_img, (car_x, car_y))
             ekraan.blit(roadblock_img, (obstacle_x, obstacle_y))
-            coin_collected = False
 
+            # kas sätetest on valitud nooled
             if nooled:
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_LEFT] and car_x > width // 5:
                     car_x -= car_speed
                 if keys[pygame.K_RIGHT] and car_x < width // 3.75 * 3 - car_width:
                     car_x += car_speed
-
+            # kas sätetest on valitud wasd nupud
             if wasd:
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_a] and car_x > width // 5:
@@ -183,6 +216,7 @@ while running:
             obstacle_y += obstacle_speed
             coin_base_y += obstacle_speed
 
+            #kontrollib kas coin on collectitud
             if not coin_collected:
                 coin_phase += 0.1
                 coin_y = coin_base_y + math.sin(coin_phase) * 10
@@ -192,13 +226,19 @@ while running:
 
                 if car_rect.colliderect(coin_rect):
                     coin_counter += 1
+                    score += 50
                     coin_collected = True
                 else:
                     ekraan.blit(coin_img, (coin_x + (obstacle_width - 170) // 2, coin_y + 50))
 
+            # teeb auto kiiremaks kui tõkkest mööda läheb
             if obstacle_y > height:
                 obstacle_y = -obstacle_height
                 obstacle_x = random.choice(lanes)
+                obstacle_speed += 0.2
+                car_speed += 0.1
+                background_speed += 0.2
+                score += 10
 
                 obstacle_lane = lanes.index(obstacle_x)
                 coin_lane = random.choice([i for i in range(len(lanes)) if i != obstacle_lane])
@@ -208,24 +248,25 @@ while running:
                 coin_collected = False
                 coin_phase = 0
 
+            score_text = teksti_font.render(f"Score: {score}", 1, [0, 0, 0])
+            ekraan.blit(score_text, (55, 5))
 
         # Kokkupõrke kontroll
         if (car_x < obstacle_x + obstacle_width-30 and car_x + car_width-20 > obstacle_x and car_y < obstacle_y + obstacle_height-20 and car_y + car_height-20 > obstacle_y):
+            explosion_sound.play()
             death = True
             gaming = False
             slowmotion = False
             obstacle_speed = 8
             background_speed = 8
             car_speed = 5
-            coin_counter = 0
-            explosion_sound.play()
 
-
-
+        # kui slowmotion on aktiivne
         if slowmotion:
             background_speed = 2
             obstacle_speed = 2
 
+    #paneb muusike käima ja kinni
     music_color = [0, 255, 0] if 0 < mouse_x < 50 and 0 < mouse_y < 50 else [0, 0, 0]
     pygame.draw.rect(ekraan, music_color, [0, 0, 50, 50], 2)
     if music == True:
@@ -281,10 +322,22 @@ while running:
                         wasd = True
                         nooled = False
 
+                if 300 <= hiir_x <= 500 and 310 - 10 <= hiir_y <= 310 + 10:
+                    music_volume = (hiir_x - 300) / 200
+                    song.set_volume(music_volume)
+
+                if 300 <= hiir_x <= 500 and 360 - 10 <= hiir_y <= 360 + 10:
+                    sfx_volume = (hiir_x - 300) / 200
+                    explosion_sound.set_volume(sfx_volume)
+
+
+
             elif main_menu:
                 if 225 < hiir_x < 375 and 280 < hiir_y < 360:
                     main_menu = False
                     gaming = True
+                    coin_counter = 0
+                    score = 0
                 if 225 < hiir_x < 375 and 380 < hiir_y < 460:
                     settings = True
                     main_menu = False
@@ -302,6 +355,8 @@ while running:
                     obstacle_x = random.choice(lanes)
                     obstacle_y = -obstacle_height
                     coin_base_x = random.choice(lanes)
+                    coin_counter = 0
+                    score = 0
 
                 if 210 < hiir_x < 375 and 490 < hiir_y < 570:
                     main_menu = True
@@ -319,8 +374,6 @@ while running:
                         song.stop()
                         music = False
 
-    coin_text = teksti_font.render(f"Coins: {coin_counter}", 1, [255, 215, 0])
-    ekraan.blit(coin_text, (10, 740))
     pygame.display.flip()
     clock.tick(fps)
 pygame.quit()
